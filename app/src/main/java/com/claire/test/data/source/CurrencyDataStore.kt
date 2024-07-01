@@ -4,7 +4,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.claire.test.compose.currency.CurrencyType
 import com.claire.test.data.model.CurrencyInfo
 import com.claire.test.utils.KEY_CRYPTO_CURRENCY
 import com.claire.test.utils.KEY_FIAT_CURRENCY
@@ -34,25 +33,7 @@ class CurrencyDataStore(private val dataStore: DataStore<Preferences>) {
         }.isSuccess
     }
 
-    suspend fun getData(type: CurrencyType): List<CurrencyInfo> {
-        return when (type) {
-            CurrencyType.Crypto -> {
-                getCurrencyData(KEY_CRYPTO_CURRENCY)
-            }
-
-            CurrencyType.Fiat -> {
-                getCurrencyData(KEY_FIAT_CURRENCY)
-            }
-
-            CurrencyType.All -> {
-                val cryptoData = getCurrencyData(KEY_CRYPTO_CURRENCY)
-                val fiatData = getCurrencyData(KEY_FIAT_CURRENCY)
-                cryptoData + fiatData
-            }
-        }
-    }
-
-    private suspend fun getCurrencyData(key: String): List<CurrencyInfo> {
+    suspend fun getData(key: String): List<CurrencyInfo> {
         return runCatching {
             dataStore.data
                 .map { preferences ->

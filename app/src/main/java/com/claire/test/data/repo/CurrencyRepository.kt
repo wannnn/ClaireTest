@@ -5,6 +5,8 @@ import com.claire.test.data.mock.dataA
 import com.claire.test.data.mock.dataB
 import com.claire.test.data.model.CurrencyInfo
 import com.claire.test.data.source.CurrencyDataStore
+import com.claire.test.utils.KEY_CRYPTO_CURRENCY
+import com.claire.test.utils.KEY_FIAT_CURRENCY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +26,16 @@ class CurrencyRepository(private val localDataSource: CurrencyDataStore) {
 
     fun getData(type: CurrencyType): Flow<List<CurrencyInfo>> = flow {
         delay(1000) // simulate api call
-        emit(localDataSource.getData(type))
+        val data = when (type) {
+            CurrencyType.Crypto -> localDataSource.getData(KEY_CRYPTO_CURRENCY)
+            CurrencyType.Fiat -> localDataSource.getData(KEY_FIAT_CURRENCY)
+            CurrencyType.All -> {
+                val cryptoData = localDataSource.getData(KEY_CRYPTO_CURRENCY)
+                val fiatData = localDataSource.getData(KEY_FIAT_CURRENCY)
+                cryptoData + fiatData
+            }
+        }
+        emit(data)
     }.flowOn(Dispatchers.IO)
 }
 

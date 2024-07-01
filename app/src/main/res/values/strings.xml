@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">ClaireTest</string>
+
+    <!-- demo screen -->
+    <string name="clear_data">Clear Data</string>
+    <string name="insert_data">Insert Data</string>
+    <string name="crypto_currency">Crypto Currency</string>
+    <string name="fiat_currency">Fiat Currency</string>
+    <string name="all_currency">All Currency</string>
+
+    <!-- currency screen -->
     <string name="no_data">No Data</string>
+    <string name="search">Search</string>
+    <string name="no_results">No Results</string>
 </resources>

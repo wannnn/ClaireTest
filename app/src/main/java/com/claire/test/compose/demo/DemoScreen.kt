@@ -19,10 +19,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.claire.test.R
 import com.claire.test.compose.currency.CurrencyType
 import com.claire.test.ui.theme.ClaireTestTheme
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun DemoScreen(
+    viewModel: DemoViewModel = koinViewModel(),
+    onPageClick: (type: CurrencyType) -> Unit = {}
+) {
+    DemoScreen(
+        onClearData = viewModel::clearData,
+        onInsertData = viewModel::insertData,
+        onPageClick = onPageClick
+    )
+}
 
 @Composable
 fun DemoScreen(
@@ -40,27 +55,27 @@ fun DemoScreen(
     ) {
         DemoBtn(
             icon = Icons.Filled.Delete,
-            text = "Clear Data",
+            text = stringResource(id = R.string.clear_data),
             onClick = onClearData
         )
         DemoBtn(
             icon = Icons.Filled.Add,
-            text = "Insert Data",
+            text = stringResource(id = R.string.insert_data),
             onClick = onInsertData
         )
         DemoBtn(
             icon = Icons.Filled.FavoriteBorder,
-            text = "Crypto Currency",
+            text = stringResource(id = R.string.crypto_currency),
             onClick = { onPageClick(CurrencyType.Crypto) }
         )
         DemoBtn(
             icon = Icons.Filled.Favorite,
-            text = "Fiat Currency",
+            text = stringResource(id = R.string.fiat_currency),
             onClick = { onPageClick(CurrencyType.Fiat) }
         )
         DemoBtn(
             icon = Icons.Filled.Face,
-            text = "All Currency",
+            text = stringResource(id = R.string.all_currency),
             onClick = { onPageClick(CurrencyType.All) }
         )
     }
