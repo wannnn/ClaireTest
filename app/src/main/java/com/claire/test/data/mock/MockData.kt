@@ -73,6 +73,11 @@ val dataA = listOf(
         name = "USD Coin",
         symbol = "USDC"
     ),
+    CurrencyInfo(
+        id = "TRX",
+        name = "Tronclassic",
+        symbol = "TRX"
+    ),
 )
 
 val dataB = listOf(
@@ -117,5 +122,33 @@ val dataB = listOf(
         name = "United States Dollar",
         symbol = "\$",
         code = "USD"
+    ),
+)
+
+val testData = listOf(
+    CurrencyInfo(
+        id = "ETH",
+        name = "Ethereum",
+        symbol = "ETH"
+    ),
+    CurrencyInfo(
+        id = "ETC",
+        name = "Ethereum Classic",
+        symbol = "ETC"
+    ),
+    CurrencyInfo(
+        id = "TRX",
+        name = "Tronclassic",
+        symbol = "TRX"
+    ),
+    CurrencyInfo(
+        id = "BTC",
+        name = "Bitcoin",
+        symbol = "BTC"
+    ),
+    CurrencyInfo(
+        id = "CTB",
+        name = "Coinbit",
+        symbol = "CTB"
     ),
 )

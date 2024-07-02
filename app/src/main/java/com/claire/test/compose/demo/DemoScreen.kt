@@ -98,6 +98,8 @@ fun DemoBtn(
 @Composable
 fun DemoScreenPreview() {
     ClaireTestTheme {
-        DemoScreen()
+        DemoScreen(
+            onClearData = {},
+        )
     }
 }

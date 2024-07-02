@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.onEach
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
-class DemoViewModel(private val repository: CurrencyRepository): ViewModel() {
+class DemoViewModel(private val repository: CurrencyRepository) : ViewModel() {
 
     fun clearData() {
         repository.clearData()

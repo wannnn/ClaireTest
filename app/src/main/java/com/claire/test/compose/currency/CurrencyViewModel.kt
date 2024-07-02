@@ -41,10 +41,10 @@ class CurrencyViewModel(
     repository: CurrencyRepository
 ) : ViewModel() {
 
-    private var currencyType: String = savedStateHandle[KEY_CURRENCY_TYPE] ?: ""
+    private var currencyType: String? = savedStateHandle[KEY_CURRENCY_TYPE]
 
-    val uiState: StateFlow<CurrencyUiState> =
-        repository.getData(CurrencyType.valueOf(currencyType)).map {
+    val uiState: StateFlow<CurrencyUiState> = currencyType?.let { type ->
+        repository.getData(CurrencyType.valueOf(type)).map {
             if (it.isEmpty()) {
                 CurrencyUiState.Empty
             } else {
@@ -55,15 +55,14 @@ class CurrencyViewModel(
             started = WhileSubscribed(5_000),
             initialValue = CurrencyUiState.Loading,
         )
+    } ?: MutableStateFlow(CurrencyUiState.Empty)
 
     private val _searchUiState = MutableStateFlow(SearchUiState())
     val searchUiState: StateFlow<SearchUiState> = _searchUiState.asStateFlow()
 
     fun onSearchQueryChange(query: String) {
         _searchUiState.update { it.copy(searchQuery = query) }
-        updateSearchResults(
-            (uiState.value as? CurrencyUiState.CurrencyList)?.currencyList.orEmpty(), query
-        )
+        updateSearchResults(query)
     }
 
     fun onToggleSearch(active: Boolean) {
@@ -71,11 +70,12 @@ class CurrencyViewModel(
         onSearchQueryChange("")
     }
 
-    private fun updateSearchResults(currencyList: List<CurrencyInfo>, query: String) {
+    private fun updateSearchResults(query: String) {
+        val originalList = (uiState.value as? CurrencyUiState.CurrencyList)?.currencyList.orEmpty()
         val filteredList = if (query.isEmpty()) {
             listOf()
         } else {
-            currencyList.filter { currency ->
+            originalList.filter { currency ->
                 val nameMatches = currency.name.startsWith(query, ignoreCase = true) ||
                         currency.name.contains(" $query", ignoreCase = true)
                 val symbolMatches = currency.symbol.startsWith(query, ignoreCase = true)
