@@ -7,13 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class CurrencyTestRepository : CurrencyRepository {
-    override fun clearData(): Flow<Unit> = flow {
-        emit(Unit)
-    }
+    override suspend fun clearData() {}
 
-    override fun insertData(): Flow<Boolean> = flow {
-        emit(true)
-    }
+    override suspend fun insertData(): Boolean = true
 
     override fun getData(type: CurrencyType): Flow<List<CurrencyInfo>> = flow {
         emit(testData)

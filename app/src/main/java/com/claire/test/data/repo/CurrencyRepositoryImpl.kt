@@ -10,31 +10,51 @@ import com.claire.test.utils.KEY_FIAT_CURRENCY
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Single
 
 @Single
 class CurrencyRepositoryImpl(private val localDataSource: CurrencyDataStore) : CurrencyRepository {
-    override fun clearData(): Flow<Unit> = flow {
-        emit(localDataSource.clearData())
-    }.flowOn(Dispatchers.IO)
+    override suspend fun clearData() {
+        withContext(Dispatchers.IO) {
+            localDataSource.clearData()
+        }
+    }
 
-    override fun insertData(): Flow<Boolean> = flow {
-        emit(localDataSource.insertData(dataA, dataB))
-    }.flowOn(Dispatchers.IO)
+    override suspend fun insertData(): Boolean {
+        return withContext(Dispatchers.IO) {
+            localDataSource.insertData(dataA, dataB)
+        }
+    }
 
-    override fun getData(type: CurrencyType): Flow<List<CurrencyInfo>> = flow {
-        delay(1000) // simulate api call
-        val data = when (type) {
+    override fun getData(type: CurrencyType): Flow<List<CurrencyInfo>> {
+        return when (type) {
             CurrencyType.Crypto -> localDataSource.getData(KEY_CRYPTO_CURRENCY)
+                .map { data ->
+                    delay(1000) // simulate api call
+                    data
+                }
+                .flowOn(Dispatchers.IO)
+
             CurrencyType.Fiat -> localDataSource.getData(KEY_FIAT_CURRENCY)
+                .map { data ->
+                    delay(1000) // simulate api call
+                    data
+                }
+                .flowOn(Dispatchers.IO)
+
             CurrencyType.All -> {
-                val cryptoData = localDataSource.getData(KEY_CRYPTO_CURRENCY)
-                val fiatData = localDataSource.getData(KEY_FIAT_CURRENCY)
-                cryptoData + fiatData
+                combine(
+                    localDataSource.getData(KEY_CRYPTO_CURRENCY),
+                    localDataSource.getData(KEY_FIAT_CURRENCY)
+                ) { cryptoData, fiatData ->
+                    delay(1000) // simulate api call
+                    cryptoData + fiatData
+                }.flowOn(Dispatchers.IO)
             }
         }
-        emit(data)
-    }.flowOn(Dispatchers.IO)
+    }
 }

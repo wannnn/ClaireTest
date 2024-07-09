@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.claire.test.data.model.CurrencyInfo
 import com.claire.test.utils.KEY_CRYPTO_CURRENCY
 import com.claire.test.utils.KEY_FIAT_CURRENCY
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -33,13 +33,11 @@ class CurrencyDataStore(private val dataStore: DataStore<Preferences>) {
         }.isSuccess
     }
 
-    suspend fun getData(key: String): List<CurrencyInfo> {
-        return runCatching {
-            dataStore.data
-                .map { preferences ->
-                    val jsonStr = preferences[stringPreferencesKey(key)].orEmpty()
-                    Json.decodeFromString<List<CurrencyInfo>>(jsonStr)
-                }.first()
-        }.getOrElse { emptyList() }
+    fun getData(key: String): Flow<List<CurrencyInfo>> {
+        return dataStore.data
+            .map { preferences ->
+                val jsonStr = preferences[stringPreferencesKey(key)].orEmpty()
+                Json.decodeFromString<List<CurrencyInfo>>(jsonStr)
+            }
     }
 }

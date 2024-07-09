@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.claire.test.R
 import com.claire.test.data.model.CurrencyInfo
 import com.claire.test.ui.theme.ClaireTestTheme
+import kotlinx.collections.immutable.persistentListOf
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -41,6 +42,7 @@ fun CurrencyScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
+
     CurrencyScreen(
         uiState = uiState,
         searchUiState = searchUiState,
@@ -83,7 +85,10 @@ fun CurrencyScreen(
 @Composable
 fun CurrencyList(currencyList: List<CurrencyInfo>) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(currencyList) {
+        items(
+            items = currencyList,
+            key = { it.id }
+        ) {
             CurrencyItem(it)
             HorizontalDivider()
         }
@@ -170,7 +175,7 @@ fun CurrencyScreenPreview() {
     ClaireTestTheme {
         CurrencyScreen(
             uiState = CurrencyUiState.CurrencyList(
-                currencyList = listOf(
+                currencyList = persistentListOf(
                     CurrencyInfo(
                         id = "BTC",
                         name = "Bitcoin",

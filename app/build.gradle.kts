@@ -68,6 +68,7 @@ dependencies {
     ksp(libs.koin.compiler)
     implementation(libs.datastore.preferences)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.kotlinx.immutable)
     testImplementation(libs.junit)
     testImplementation(libs.koin.test)
     testImplementation(libs.koin.test.junit4)

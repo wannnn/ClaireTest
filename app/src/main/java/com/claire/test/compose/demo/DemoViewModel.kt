@@ -3,24 +3,17 @@ package com.claire.test.compose.demo
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.claire.test.data.repo.CurrencyRepository
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class DemoViewModel(private val repository: CurrencyRepository) : ViewModel() {
 
-    fun clearData() {
+    fun clearData() = viewModelScope.launch {
         repository.clearData()
-            .catch { println("Failed to clear data") }
-            .launchIn(viewModelScope)
     }
 
-    fun insertData() {
+    fun insertData() = viewModelScope.launch {
         repository.insertData()
-            .catch { println("Failed to insert data") }
-            .onEach { println(it) }
-            .launchIn(viewModelScope)
     }
 }
